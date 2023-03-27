@@ -1,0 +1,92 @@
+.main {
+  font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+  font-size: medium;
+  font-weight: 600;
+  background-color: white;
+
+}
+
+.main button {
+  margin: 20px;
+}
+
+.main div {
+  padding-bottom: 8px;
+}
+
+.main h1 {
+  padding-bottom: 100px;
+  font-weight: 700;
+  font-size: 70px;
+}
+
+.main h3 {
+  font-weight: 400;
+  font-size: 2rem;
+  color: brown;
+}
+
+.small {
+  font-size: 10px;
+}
+
+.footer {
+  background-color: white;
+  padding: 30px;
+}
+
+.playMainPage {
+  font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+  background-color:rgb(255, 255, 255);
+  min-height: 87vh;
+  padding: 2rem 2rem;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  
+}
+
+.playMainPage h1 {
+  font-weight: 700;
+  font-size: 5rem;
+  margin-left: 6.5rem;
+  margin-bottom: 3rem;
+  margin-top: 3rem;
+}
+
+.playMainPage h2 {
+ 
+  padding: 4rem 10rem;
+}
+
+.bankMain {
+  background-color:aliceblue;
+  min-height: 100vh;
+  padding: 2rem 2rem;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.buyBox {
+  width: 20%;
+  align-items: center;
+  margin: auto;
+  display: flex;
+  flex-direction: column;
+}
+
+.shopMain {
+  background-color:aliceblue;
+  min-height: 100vh;
+  padding: 2rem 2rem;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
