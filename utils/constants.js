@@ -411,4 +411,4 @@ const tokenContract = (provider) => {
 	)
 }
 
-export default tokenContract;
+export { tokenContract, tokenContractABI, tokenContractAddress };

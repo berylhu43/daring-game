@@ -2,59 +2,51 @@
 pragma solidity ^0.8.17;
 
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
-import './DLToken.sol';
 
-contract buyToken is ERC20 {
-	address payable public owner;
-	address public player;
-	uint public _redeem = 10;
-	uint public Eth = 10 ** 18;
-	uint public tokenBought;
-	// uint amount;
-	// uint public requireFee = amount *Eth/100000;
+contract BuyToken is ERC20 {
+    address payable public owner;
+    uint public redeemAmount = 10;
+    uint public tokenBought;
+    uint public rate = 100000; // Number of tokens per Ether
 
+    mapping(address => bool) private hasRedeemed;
 
-	mapping(address => bool) private addressToRedeem;
-	mapping(address => uint) private addressBalance;
-	mapping(uint => uint) private ethToToken;
-	mapping(uint => uint) private tokenToEth;
-
-	constructor() ERC20('DisneyLandToken', 'DLT') {
-		owner = payable(msg.sender);
-		_mint(owner, 10000000* (10 ** decimals()));
+    constructor() ERC20('DisneyLandToken', 'DLT') {
+        owner = payable(msg.sender);
+        _mint(owner, 10000000 * (10 ** decimals()));
     }
 
-	function redeem() public {
-		player = msg.sender;
-		require (addressToRedeem[msg.sender] == false);
-		require (msg.sender != owner);
-		require (_redeem <= balanceOf(owner));
-		_transfer(owner, player, _redeem);
-		emit Transfer(owner, player, _redeem);
-		addressToRedeem[msg.sender] = true;
-	}
-	
+    modifier onlyOwner() {
+        require(msg.sender == owner, "Not the contract owner");
+        _;
+    }
 
-	function calculator(uint amount) public view returns(uint) {
-		uint payByWei;
-		payByWei = amount* Eth/100000;
-		return payByWei;
-	}
+    modifier onlyOnce() {
+        require(!hasRedeemed[msg.sender], "Already redeemed");
+        _;
+    }
 
-	function getToken(uint amount) external payable {
-		player = msg.sender;
-		_transfer(owner, player, amount);
-		tokenBought += amount;
-	}
+    function redeem() external onlyOnce {
+        require(balanceOf(owner) >= redeemAmount, "Not enough tokens available to redeem");
+        _transfer(owner, msg.sender, redeemAmount);
+        hasRedeemed[msg.sender] = true;
+    }
 
-	function sendEth() public payable {
+    function buyToken() external payable {
+        uint amount = calculateTokens(msg.value);
+        require(amount > 0, "Need to send more Ether to buy tokens");
+        require(balanceOf(owner) >= amount, "Not enough tokens available for sale");
+        _transfer(owner, msg.sender, amount);
+        tokenBought += amount;
+        owner.transfer(msg.value); // Transfer the received Ether to the owner
+    }
 
-	}
+    function calculateTokens(uint etherAmount) public view returns (uint) {
+        return etherAmount * rate / (10 ** 18); // calculate number of tokens as per rate and considering 18 decimal places of Ether
+    }
 
-	function sellWithToken (uint amount) external payable {
-		player = msg.sender;
-		_transfer(player, owner, amount); 
-		payable(player).transfer(msg.value); 
-	}
-	
+    // This function allows the owner to withdraw any Ether that was sent to the contract by mistake
+    function withdrawEther() external onlyOwner {
+        owner.transfer(address(this).balance);
+    }
 }
